@@ -22,7 +22,7 @@ const client = new MongoClient(uri, {
 //mondodb_Clint end
 
 app.get("/", (req, res) => {
-  res.send("I Love Express more and more day by day");
+  res.send("I Love Express more and more day by day...");
 });
 
 app.listen(port, () => {
@@ -43,6 +43,16 @@ async function run() {
       const cursor = userCollection.find(query);
       const data = await cursor.toArray();
       res.send(data);
+    });
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const data = req.body;
+      const update = { $set: data };
+      const options = { upsert: true };
+      const result = await userCollection.updateOne(query, update, options);
+      console.log(id, data);
+      console.log(result);
     });
   } finally {
     // await client.close()
